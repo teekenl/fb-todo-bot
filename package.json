@@ -1,0 +1,26 @@
+{
+  "name": "fb-todo-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teekenl/fb-todo-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teekenl/fb-todo-bot/issues"
+  },
+  "homepage": "https://github.com/teekenl/fb-todo-bot#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.15.4",
+    "facebook-chat-api": "^1.4.0",
+    "firebase": "^4.3.0",
+    "request": "^2.81.0"
+  }
+}
