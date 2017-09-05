@@ -51,7 +51,7 @@ function list(event, api, fb) {
         var message_count = 0;
         for (var todo in data.val()){
             message_count++;
-            message += message_count + ": " + data.val()[todo] + "\n";
+            message += message_count + ": " + data.val()[todo].todo + "\n";
         }
         if(message_count === 0) {
             message += "NO ITEM ADDED";
