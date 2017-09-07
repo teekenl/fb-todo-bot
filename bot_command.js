@@ -31,7 +31,7 @@ function editItem(event, api, fb, index, newTodo) {
                     "date": new Date().toLocaleTimeString() + " " + new Date().toLocaleTimeString(),
                     "completed": "no"
                 });
-                api.sendMessage("No: " + count +"item's name has been updated ", event.threadID);
+                api.sendMessage("No: " + count +" item's name has been updated ", event.threadID);
                 //list(event, api, fb);
             }
             count ++;
@@ -41,14 +41,13 @@ function editItem(event, api, fb, index, newTodo) {
 
 function hasItem(event, api, fb, todo) {
     fb.child(event.threadID).once("value",function(data) {
-        data.forEach(function(childData){
-            var child_json = childData.val();
-
-            if(child_json.todo === todo) {
-                fb.child(event.threadID).child(childData.key).set(null);
+        for (var element in data.val()){
+            var child_JSON = data.val()[element];
+            if(child_JSON.todo === todo) {
+                fb.child(event.threadID).child(element).set(null);
                 return true;
             }
-        });
+        }
     });
     return false;
 }
@@ -88,28 +87,32 @@ function list(event, api, fb) {
 
 function filterList(event, api, fb, type) {
     var message_type = type === "yes" ? "COMPLETED" : "INCOMPLETED";
-    var message = "TODO LIST ( " + message_type +")";
+    var message = "TODO LIST  ( " + message_type +" )\n";
     var message_count = 0;
+
+    console.log("Filter request from "+ event.threadID);
+    console.log("Filtering...");
+
     fb.child("" + event.threadID).once("value", function(data) {
-        data.forEach(function(childData){
-            var filter_type = childData.completed === type;
-            if(filter_type) {
-                message_count++;
-                message += message_count + ": " + childData.todo + "\n";
+        for (var element in data.val()){
+            var child_JSON = data.val()[element];
+            if(child_JSON.completed === type) {
+                message_count ++;
+                message += message_count + ": " + child_JSON.todo + "\n";
             }
-        });
-    });
-    if(message_count > 0 ) {
-        api.sendMessage(message,event.threadID);
-    } else{
-        if(message_count === "COMPLETED") {
-            api.sendMessage("You have not yet completed anything. \n" +
-                                "Enter /incompleted to find more about it" , event.threadID);
-        } else{
-            api.sendMessage("Good Job, You are perfectly fine\n" +
-                             "You have nothing left behind.", event.threadID);
         }
-    }
+        if(message_count > 0 ) {
+            api.sendMessage(message,event.threadID);
+        } else{
+            if(message_type === "COMPLETED") {
+                api.sendMessage("You have not yet completed anything. \n" +
+                    "Enter /incompleted to find more about it" , event.threadID);
+            } else{
+                api.sendMessage("Good Job, You are perfectly fine\n" +
+                    "You have nothing left behind.", event.threadID);
+            }
+        }
+    });
 
 }
 
@@ -117,29 +120,35 @@ function updateList(event, api, fb, type, todo) {
     var itemFound = false;
     var tick = type === "tick" ? "yes" : "no";
 
+    console.log("Updating request from "+ event.threadID + " \n for item: " + todo);
+    console.log("Updating...");
+
     fb.child(event.threadID).once("value", function(data) {
-        data.forEach(function(childData){
-            if(childData.todo === todo  && !itemFound) {
-                fb.child(event.threadID).child(childData.key).set({
-                    "todo": childData.todo,
+        for (var element in data.val()){
+            var child_JSON = data.val()[element];
+
+            if(child_JSON.todo === todo  && !itemFound) {
+                fb.child(event.threadID).child(element).set({
+                    "todo": child_JSON.todo,
                     "date": new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
                     "completed": tick
                 });
                 itemFound = true;
+                console.log("The request is updated");
             }
-        });
+        }
+        if(itemFound) {
+            var message_status = type === "tick" ? " is completed" : " is not completed";
+            api.sendMessage("The " + todo + message_status , event.threadID);
+            console.log(todo + "'status has been updated ");
+        } else{
+            api.sendMessage("No item was found \n" +
+                "Have you forgotten your todo? \n" +
+                "Enter /list to find out more about it", event.threadID);
+        }
     });
 
-    if(itemFound) {
-        var message_status =  type === "tick" ? " is completed" : " is not completed";
-        api.sendMessage(todo + message_status , event.threadID);
-        console.log(todo + "'status has been updated ");
-    } else{
-        api.sendMessage("No item was found", event.threadID);
-    }
-
 }
-
 
 function add(event, api, fb) {
     var todo = event.body.substring(5).toLowerCase().trim();
@@ -217,12 +226,12 @@ function incompleted(event, api, fb) {
 }
 
 function tick(event, api, fb) {
-    var todo = event.substring(6).toLowerCase().trim();
+    var todo = event.body.substring(6).toLowerCase().trim();
     updateList(event,api, fb, "tick", todo);
 }
 
 function untick(event, api, fb) {
-    var todo = event.substring(8).toLowerCase().trim();
+    var todo = event.body.substring(8).toLowerCase().trim();
     updateList(event, api, fb, "untick", todo);
 }
 
@@ -237,7 +246,8 @@ function invalidCommand(event,api, fb) {
                     "5) /tick (item)\n" +
                     "6) /untick (item) \n" +
                     "7) /completed \n" +
-                    "8) /incompleted \n";
+                    "8) /incompleted \n" +
+                    "9) /detail (item) \n";
 
     api.sendMessage(error+message,event.threadID);
 }
@@ -251,9 +261,28 @@ function help(event, api) {
                     "5) /tick (item)\n" +
                     "6) /untick (item) \n" +
                     "7) /completed \n" +
-                    "8) /incompleted \n";
+                    "8) /incompleted \n" +
+                    "9) /detail (item) \n";
     api.sendMessage(message, event.threadID);
-};
+}
+
+function detail(event, api, fb) {
+    var todo = event.body.substring(8).toLowerCase().trim();
+    var message = "The " + todo + " 's details are as per below:\n";
+    fb.child(event.threadID).once("value", function(data) {
+        data.forEach(function(childData){
+            var child_JSON = childData.val();
+            if(child_JSON.todo === todo) {
+                message+= "Item: " + child_JSON.todo + "\n";
+                message+= "Created at: " + child_JSON.date + "\n";
+                message+= "Status: " + (child_JSON.completed === "yes" ? "Completed": "Not completed");
+                return true;
+            }
+        });
+        api.sendMessage(message, event.threadID);
+    });
+
+}
 
 module.exports = {
     add: add,
@@ -268,5 +297,6 @@ module.exports = {
     filterIncompleted: incompleted,
     tick: tick,
     untick: untick,
-    help: help
+    help: help,
+    detail: detail
 };

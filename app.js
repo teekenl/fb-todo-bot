@@ -1,9 +1,10 @@
 // Initialize the required libraries
-var fs = require('fs');
 var express = require('express');
 var app = express();
 var fb_api = require('facebook-chat-api');
 var Firebase = require('firebase');
+
+var userThreadID = [];
 
 var config = require('./config');
 
@@ -44,8 +45,15 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
         listenEvents: true // Set the listener to be true. Bot started to listen
     });
 
+    // Automated notification will be added here. More feature coming soon.
+
     var stopListening = api.listen(function(err, event) {
         if(err) return console.error("API stopped listening due to" + err);
+
+        api.markAsRead(event.threadID, function(err){
+            if(err) console.log(err);
+        });
+
         switch(event.type) {
             case "message":
                 if (event.body !== null || event.body.substring(1, 0) === '/') {
@@ -75,6 +83,8 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                         command.untick(event, api, fb);
                     } else if(verifiedCommand(event, "/help")) {
                         command.help(event, api);
+                    } else if (verifiedCommand(event, "/detail")){
+                        command.detail(event,api,fb);
                     } else {
                         console.log("Invalid command received.");
                         command.invalidCommand(event, api, fb);
@@ -84,7 +94,6 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                     command.invalidCommand(event, api, fb);
                 }
         }
-
     });
 });
 
