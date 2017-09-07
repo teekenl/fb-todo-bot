@@ -18,9 +18,6 @@ var fb = Firebase.initializeApp(firebaseConfig).database().ref();
 
 var command = require('./bot_command');
 
-
-var request = require('request');
-var cheerio = require('cheerio');
 var port = process.env.PORT || 3000;
 
 app.get('/',function(req,res){
@@ -49,7 +46,6 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
 
     var stopListening = api.listen(function(err, event) {
         if(err) return console.error("API stopped listening due to" + err);
-
         switch(event.type) {
             case "message":
                 if (event.body !== null || event.body.substring(1, 0) === '/') {
@@ -69,6 +65,16 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                         //return stopListening();
                     } else if (verifiedCommand(event, "/list")) {
                         command.list(event, api, fb);
+                    } else if(verifiedCommand(event, "/completed")) {
+                        command.filterCompleted(event, api, fb);
+                    } else if(verifiedCommand(event, "/incompleted")){
+                        command.filterIncompleted(event, api, fb);
+                    } else if(verifiedCommand(event, "/tick")){
+                        command.tick(event, api, fb);
+                    } else if(verifiedCommand(event, "/untick")){
+                        command.untick(event, api, fb);
+                    } else if(verifiedCommand(event, "/help")) {
+                        command.help(event, api);
                     } else {
                         console.log("Invalid command received.");
                         command.invalidCommand(event, api, fb);
