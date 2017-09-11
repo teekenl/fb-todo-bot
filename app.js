@@ -48,52 +48,58 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
     // Automated notification will be added here. More feature coming soon.
 
     var stopListening = api.listen(function(err, event) {
+        console.log("message received");
         if(err) return console.error("API stopped listening due to" + err);
 
+        var indicator = api.sendTypingIndicator(event.threadID, undefined)(function (err) {
+            if(err) throw err;
+            switch(event.type) {
+                case "message":
+
+                    if (event.body !== null || event.body.substring(1, 0) === '/') {
+
+                        if (verifiedCommand(event, "/add")) {
+                            command.add(event, api, fb);
+                        } else if (verifiedCommand(event, "/elo")) {
+                            command.elo(event, api, fb);
+                        } else if (verifiedCommand(event, "/remove")) {
+                            command.remove(event, api, fb);
+                        } else if (verifiedCommand(event, "/edit")) {
+                            command.edit(event, api, fb);
+                        } else if (verifiedCommand(event, "/clear")) {
+                            command.clear(event, api, fb);
+                        } else if (verifiedCommand(event, "/stop")) {
+                            console.log("The todo bot has been stopped");
+                            api.sendMessage("Goodbye.", event.threadID);
+                            //return stopListening();
+                        } else if (verifiedCommand(event, "/list")) {
+                            command.list(event, api, fb);
+                        } else if(verifiedCommand(event, "/completed")) {
+                            command.filterCompleted(event, api, fb);
+                        } else if(verifiedCommand(event, "/incompleted")){
+                            command.filterIncompleted(event, api, fb);
+                        } else if(verifiedCommand(event, "/tick")){
+                            command.tick(event, api, fb);
+                        } else if(verifiedCommand(event, "/untick")){
+                            command.untick(event, api, fb);
+                        } else if(verifiedCommand(event, "/help")) {
+                            command.help(event, api);
+                        } else if (verifiedCommand(event, "/detail")){
+                            command.detail(event,api,fb);
+                        } else {
+                            console.log("Invalid command received.");
+                            command.invalidCommand(event, api, fb);
+                        }
+                    } else {
+                        console.log("Wrong message received.");
+                        command.invalidCommand(event, api, fb);
+                    }
+            }
+        });
         api.markAsRead(event.threadID, function(err){
             if(err) console.log(err);
         });
 
-        switch(event.type) {
-            case "message":
-                if (event.body !== null || event.body.substring(1, 0) === '/') {
-                    if (verifiedCommand(event, "/add")) {
-                        command.add(event, api, fb);
-                    } else if (verifiedCommand(event, "/elo")) {
-                        command.elo(event, api, fb);
-                    } else if (verifiedCommand(event, "/remove")) {
-                        command.remove(event, api, fb);
-                    } else if (verifiedCommand(event, "/edit")) {
-                        command.edit(event, api, fb);
-                    } else if (verifiedCommand(event, "/clear")) {
-                        command.clear(event, api, fb);
-                    } else if (verifiedCommand(event, "/stop")) {
-                        console.log("The todo bot has been stopped");
-                        api.sendMessage("Goodbye.", event.threadID);
-                        //return stopListening();
-                    } else if (verifiedCommand(event, "/list")) {
-                        command.list(event, api, fb);
-                    } else if(verifiedCommand(event, "/completed")) {
-                        command.filterCompleted(event, api, fb);
-                    } else if(verifiedCommand(event, "/incompleted")){
-                        command.filterIncompleted(event, api, fb);
-                    } else if(verifiedCommand(event, "/tick")){
-                        command.tick(event, api, fb);
-                    } else if(verifiedCommand(event, "/untick")){
-                        command.untick(event, api, fb);
-                    } else if(verifiedCommand(event, "/help")) {
-                        command.help(event, api);
-                    } else if (verifiedCommand(event, "/detail")){
-                        command.detail(event,api,fb);
-                    } else {
-                        console.log("Invalid command received.");
-                        command.invalidCommand(event, api, fb);
-                    }
-                } else {
-                    console.log("Wrong message received.");
-                    command.invalidCommand(event, api, fb);
-                }
-        }
     });
 });
 
