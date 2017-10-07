@@ -246,7 +246,7 @@ function invalidCommand(event,api, fb) {
                     "5) /tick (item)\n" +
                     "6) /untick (item) \n" +
                     "7) /completed \n" +
-                    "8) /incompleted \n" +
+                    "8\) /incompleted \n" +
                     "9) /detail (item) \n";
 
     api.sendMessage(error+message,event.threadID);
@@ -261,7 +261,7 @@ function help(event, api) {
                     "5) /tick (item)\n" +
                     "6) /untick (item) \n" +
                     "7) /completed \n" +
-                    "8) /incompleted \n" +
+                    "8\) /incompleted \n" +
                     "9) /detail (item) \n";
     api.sendMessage(message, event.threadID);
 }

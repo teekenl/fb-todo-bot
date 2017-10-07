@@ -25,7 +25,6 @@ app.get('/',function(req,res){
     res.send('Welcome to Fb todo created by ken lau');
 });
 
-
 var server = app.listen(port, function(){
     var host = server.address().address;
     var port = server.address().port;
@@ -48,16 +47,16 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
     // Automated notification will be added here. More feature coming soon.
 
     var stopListening = api.listen(function(err, event) {
-        console.log("message received");
         if(err) return console.error("API stopped listening due to" + err);
 
         var indicator = api.sendTypingIndicator(event.threadID, undefined)(function (err) {
             if(err) throw err;
             switch(event.type) {
                 case "message":
-
+                    console.log(JSON.stringify(event));
                     if (event.body !== null || event.body.substring(1, 0) === '/') {
-
+                        console.log(event.body);
+                        console.log("message received");
                         if (verifiedCommand(event, "/add")) {
                             command.add(event, api, fb);
                         } else if (verifiedCommand(event, "/elo")) {
