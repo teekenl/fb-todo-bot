@@ -151,6 +151,7 @@ function edit(event, api, fb) {
                     fb.child(event.threadID).child(x).set({
                         "todo": newTodo,
                         "date": new Date().toLocaleTimeString() + " " + new Date().toLocaleTimeString()
+                        //"completed": "no"
                     });
                     api.sendMessage("No: " + count +" item's name has been updated ", event.threadID);
                 }
