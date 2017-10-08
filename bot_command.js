@@ -170,29 +170,48 @@ function clear(event, api, fb) {
 
 // To show the todo item has already completed with given user id
 function completed(event,api, fb) {
-    helper.filterList(event,api,fb,"yes");
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" ");
+    if(todo.length<=0) {
+        helper.filterList(event,api,fb,"yes");
+    } else{
+        invalidCommand(event,api,fb,error.wrongCommandFormat);
+    }
+
 }
 
 // To show the todo item has already incompleted with given user id
 function incompleted(event, api, fb) {
-    helper.filterList(event,api,fb,"no");
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" ");
+    if(todo.length<0) {
+        helper.filterList(event,api,fb,"no");
+    } else{
+        invalidCommand(event, api, fb, error.wrongCommandFormat);
+    }
 }
 
 // To mark the todo item to the completed status with given todo name
 function tick(event, api, fb) {
-    var todo = helper.getTodoNameWithLowerCase(event.body).trim();
-    helper.updateTodo(event,api, fb, true, todo);
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" ");
+    if(todo.length > 0) {
+        if(todo.length === 1) {
+            helper.updateTodo(event,api, fb, true, todo);
+        } else {
+            invalidCommand(event,api,fb,error.wrongCommandFormat);
+        }
+    } else {
+        api.sendMessage(error.noFileName,event.threadID);
+    }
+
 }
 
 // To mark the todo item to the incompleted status with given todo name
 function untick(event, api, fb) {
-    var todo = helper.getTodoNameWithLowerCase(event.body).trim();
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" ");
     helper.updateTodo(event, api, fb, false, todo);
 }
 
-function picture(event, api, fb) {
+function picture(event, api, fb) {}
 
-}
 
 // To render invalid command error and prompt available command to the user
 function invalidCommand(event,api, fb, error) {
