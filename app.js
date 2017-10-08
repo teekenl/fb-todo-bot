@@ -11,12 +11,11 @@ var express = require('express'),
         databaseURL: config.databaseURL,
         storageBucket: config.storageBucket
     },
-    command = require('./bot_command'),
-    verifiedCommand = require('./helper').verifiedCommand,
-    port = process.env.PORT || 3000; // initialize port number
-
-var userThreadID = [];
-var fb = Firebase.initializeApp(firebaseConfig).database().ref();
+    command = require('./util').getCommand,
+    invalidCommand = require('./bot_command').invalidCommand,
+    error = require('./error'),
+    port = process.env.PORT || 3000, // initialize port number
+    fb = Firebase.initializeApp(firebaseConfig).database().ref();
 
 // Set up server listening port.
 var server = app.listen(port, function(){
@@ -44,43 +43,22 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
             if(err) throw err;
             switch(event.type) {
                 case "message":
-                    console.log(JSON.stringify(event));
-                    if (event.body !== null || event.body.substring(1, 0) === '/') {
-                        console.log(event.body);
-                        if (verifiedCommand(event, "/add")) {
-                            command.add(event, api, fb);
-                        } else if (verifiedCommand(event, "/elo")) {
-                            command.elo(event, api, fb);
-                        } else if (verifiedCommand(event, "/remove")) {
-                            command.remove(event, api, fb);
-                        } else if (verifiedCommand(event, "/edit")) {
-                            command.edit(event, api, fb);
-                        } else if (verifiedCommand(event, "/clear")) {
-                            command.clear(event, api, fb);
-                        } else if (verifiedCommand(event, "/stop")) {
-                            console.log("The todo bot has been stopped");
-                            api.sendMessage("Goodbye.", event.threadID);
-                        } else if (verifiedCommand(event, "/list")) {
-                            command.list(event, api, fb);
-                        } else if(verifiedCommand(event, "/completed")) {
-                            command.filterCompleted(event, api, fb);
-                        } else if(verifiedCommand(event, "/incompleted")){
-                            command.filterIncompleted(event, api, fb);
-                        } else if(verifiedCommand(event, "/tick")){
-                            command.tick(event, api, fb);
-                        } else if(verifiedCommand(event, "/untick")){
-                            command.untick(event, api, fb);
-                        } else if(verifiedCommand(event, "/help")) {
-                            command.help(event, api);
-                        } else if (verifiedCommand(event, "/detail")){
-                            command.detail(event,api,fb);
+                    var thread_message = event.body !== null ?
+                                            event.body.split(' '): null;
+
+                    if(thread_message.length === 2 || thread_message[0] === '/list' ) {
+                        var exec_command = command(event,thread_message[0]);
+                        if(exec_command !== null) {
+                            console.log("valid command received");
+                            exec_command(event,api,fb);
                         } else {
-                            console.log("Invalid command received.");
-                            command.invalidCommand(event, api, fb);
+                            console.log("wrong command received.");
+                            invalidCommand(event, api, fb, error.wrongCommand);
                         }
-                    } else {
-                        console.log("Wrong message received.");
-                        command.invalidCommand(event, api, fb);
+                    } else{
+                        // wrong format puts here
+                        console.log("wrong command received.");
+                        invalidCommand(event, api, fb, error.wrongCommand);
                     }
             }
         });

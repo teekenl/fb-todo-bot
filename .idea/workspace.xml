@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a45cfd82-53ca-4de8-9260-9d60ede19a23" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/service.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bot_command.js" afterPath="$PROJECT_DIR$/bot_command.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/error.js" afterPath="$PROJECT_DIR$/error.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helper.js" afterPath="$PROJECT_DIR$/helper.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/route.js" afterPath="$PROJECT_DIR$/route.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,41 +21,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="route.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/route.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bot_command.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bot_command.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1324">
-              <caret line="205" column="14" lean-forward="false" selection-start-line="205" selection-start-column="14" selection-end-line="205" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="helper.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/helper.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="708">
-              <caret line="80" column="0" lean-forward="true" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1698">
-              <caret line="87" column="37" lean-forward="true" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
+            <state relative-caret-position="504">
+              <caret line="60" column="73" lean-forward="false" selection-start-line="60" selection-start-column="73" selection-end-line="60" selection-end-column="73" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bot_command.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bot_command.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2810">
+              <caret line="82" column="75" lean-forward="false" selection-start-line="82" selection-start-column="75" selection-end-line="82" selection-end-column="75" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="util.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/util.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="812">
+              <caret line="29" column="18" lean-forward="true" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -89,10 +81,15 @@
       <find>end</find>
       <find>form</find>
       <find>isNumeric</find>
-      <find>createJSON</find>
       <find>hasItem</find>
-      <find>hasItemIndex</find>
       <find>request</find>
+      <find>createJSON</find>
+      <find>helper</find>
+      <find>hasItemIndex</find>
+      <find>updateList</find>
+      <find>updateLust</find>
+      <find>pi</find>
+      <find>invalida</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\kenlau\Desktop\Git\fb-todo-bot\node_modules</dir>
@@ -109,11 +106,14 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/config.js" />
-        <option value="$PROJECT_DIR$/error.js" />
         <option value="$PROJECT_DIR$/route.js" />
-        <option value="$PROJECT_DIR$/bot_command.js" />
+        <option value="$PROJECT_DIR$/boilerplate.js" />
+        <option value="$PROJECT_DIR$/test.js" />
+        <option value="$PROJECT_DIR$/util.js" />
         <option value="$PROJECT_DIR$/helper.js" />
+        <option value="$PROJECT_DIR$/error.js" />
         <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/bot_command.js" />
       </list>
     </option>
   </component>
@@ -211,12 +211,12 @@
       <workItem from="1505197245806" duration="279000" />
       <workItem from="1505205244412" duration="45000" />
       <workItem from="1507376149401" duration="2409000" />
-      <workItem from="1507454645680" duration="4058000" />
+      <workItem from="1507454645680" duration="13814000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53499000" />
+    <option name="totallyTimeSpent" value="63255000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -225,6 +225,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289183" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -237,7 +238,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -513,6 +513,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/boilerplate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="868">
+          <caret line="31" column="25" lean-forward="false" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/service.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/route.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
@@ -523,32 +547,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/error.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="10" column="53" lean-forward="true" selection-start-line="10" selection-start-column="53" selection-end-line="10" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bot_command.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1324">
-          <caret line="205" column="14" lean-forward="false" selection-start-line="205" selection-start-column="14" selection-end-line="205" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1698">
-          <caret line="87" column="37" lean-forward="true" selection-start-line="87" selection-start-column="37" selection-end-line="87" selection-end-column="37" />
+        <state relative-caret-position="532">
+          <caret line="19" column="45" lean-forward="false" selection-start-line="19" selection-start-column="45" selection-end-line="19" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/helper.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="708">
-          <caret line="80" column="0" lean-forward="true" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+        <state relative-caret-position="2370">
+          <caret line="156" column="18" lean-forward="true" selection-start-line="156" selection-start-column="18" selection-end-line="156" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="60" column="73" lean-forward="false" selection-start-line="60" selection-start-column="73" selection-end-line="60" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="812">
+          <caret line="29" column="18" lean-forward="true" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bot_command.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2810">
+          <caret line="82" column="75" lean-forward="false" selection-start-line="82" selection-start-column="75" selection-end-line="82" selection-end-column="75" />
           <folding />
         </state>
       </provider>
