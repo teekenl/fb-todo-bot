@@ -28,30 +28,34 @@ var availableCommandMessage = "Available commands are shown as per below: \n" +
 
 // To extract todo item's detail with given todo name
 function detail(event, api, fb) {
-    var todo = helper.getTodoNameWithLowerCase(event.body).trim(),
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" "),
         message = "The " + todo + " 's details are as per below:\n";
     if(todo.length > 0) {
-        fb.child(event.threadID).once("value", function(data) {
-            var itemFound = false;
-            data.forEach(function(childData){
-                var child_JSON = childData.val();
-                if(child_JSON.todo === todo) {
-                    message+= "Item: " + child_JSON.todo + "\n";
-                    message+= "Created at: " + child_JSON.date + "\n";
-                    message+= "Status: " + (child_JSON.completed === "yes" ? "Completed": "Not completed");
-                    message+= "\n\n";
-                    itemFound = true;
+        if(todo.length === 1) {
+            fb.child(event.threadID).once("value", function(data) {
+                var itemFound = false;
+                data.forEach(function(childData){
+                    var child_JSON = childData.val();
+                    if(child_JSON.todo === todo) {
+                        message+= "Item: " + child_JSON.todo + "\n";
+                        message+= "Created at: " + child_JSON.date + "\n";
+                        message+= "Status: " + (child_JSON.completed === "yes" ? "Completed": "Not completed");
+                        message+= "\n\n";
+                        itemFound = true;
+                    }
+                });
+
+                if(itemFound) {
+                    api.sendMessage(message, event.threadID);
+                } else{
+                    api.sendMessage(error.todoNotFound, event.threadID);
                 }
             });
-
-            if(itemFound) {
-                api.sendMessage(message, event.threadID);
-            } else{
-                api.sendMessage(error.todoNotFound, event.threadID);
-            }
-        });
-    } else{
-        invalidCommand(event, api, fb, error.wrongCommandFormat);
+        } else{
+            invalidCommand(event,api,fb,error.wrongCommandFormat)
+        }
+    } else {
+        api.sendMessage(error.noFileName, event.threadID);
     }
 }
 
@@ -96,18 +100,22 @@ function add(event, api, fb) {
 
 // To remove todo item with given todoname
 function remove(event, api, fb) {
-    var todo = helper.getTodoNameWithLowerCase(event.body).trim();
+    var todo = helper.getTodoNameWithLowerCase(event.body).split(" ");
 
     if(todo.length > 0) {
-        if(helper.hasItemAndRemove(event, fb, todo)
-                        || helper.hasItemIndexAndRemove(event,fb, todo)) {
-            api.sendMessage(todo + " has been removed from your todo-list", event.threadID);
-            console.log("One item is removed");
+        if(todo.length === 1) {
+            if(helper.hasItemAndRemove(event, fb, todo)
+                || helper.hasItemIndexAndRemove(event,fb, todo)) {
+                api.sendMessage(todo + " has been removed from your todo-list", event.threadID);
+                console.log("One item is removed");
+            } else {
+                api.sendMessage(error.todoNotFound, event.threadID);
+            }
         } else {
-            api.sendMessage(todo + " was not found. ", event.threadID);
+            invalidCommand(event,api,fb,error.wrongCommandFormat);
         }
     } else {
-        api.sendMessage("Please provide the name of todo", event.threadID);
+        api.sendMessage(error.noFileName, event.threadID);
     }
 }
 
@@ -121,13 +129,11 @@ function edit(event, api, fb) {
                 newTodoItem = todoArray [1];
 
             editItem(event, api, fb, todoIndex, newTodoItem);
-            console.log("One item is edited");
         } else{
             invalidCommand(event, api, fb, error.wrongCommandFormat);
         }
-
     } else {
-        invalidCommand(event, api, fb, error.noFileName);
+        api.sendMessage(error.noFileName, event.threadID);
     }
 
     function editItem(event, api, fb, index, newTodo) {
@@ -144,13 +150,13 @@ function edit(event, api, fb) {
                 if(count === index) {
                     fb.child(event.threadID).child(x).set({
                         "todo": newTodo,
-                        "date": new Date().toLocaleTimeString() + " " + new Date().toLocaleTimeString(),
-                        "completed": "no"
+                        "date": new Date().toLocaleTimeString() + " " + new Date().toLocaleTimeString()
                     });
                     api.sendMessage("No: " + count +" item's name has been updated ", event.threadID);
                 }
                 count ++;
             }
+            console.log("One item is edited");
         });
     }
 }

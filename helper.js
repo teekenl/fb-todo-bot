@@ -82,8 +82,8 @@ function createJSONFormat(todo){
 }
 
 function updateTodo(event, api, fb, type, todo) {
-    var itemFound = false;
-    var tick = type === true ? "yes" : "no";
+    var itemFound = false,
+        tick = type === true ? "yes" : "no";
 
     console.log("Updating request from "+ event.threadID + " \n for item: " + todo);
     console.log("Updating...");
@@ -144,7 +144,6 @@ function filterList(event, api, fb, type) {
         }
     });
 }
-
 
 module.exports = {
     isNumeric: isNumeric,
