@@ -33,10 +33,27 @@ function editItem(event, api, fb, index, newTodo) {
                     "completed": "no"
                 });
                 api.sendMessage("No: " + count +" item's name has been updated ", event.threadID);
-                //list(event, api, fb);
             }
             count ++;
         }
+    });
+}
+
+// To extract todo item's detail with given todo name
+function detail(event, api, fb) {
+    var todo = event.body.substring(8).toLowerCase().trim();
+    var message = "The " + todo + " 's details are as per below:\n";
+    fb.child(event.threadID).once("value", function(data) {
+        data.forEach(function(childData){
+            var child_JSON = childData.val();
+            if(child_JSON.todo === todo) {
+                message+= "Item: " + child_JSON.todo + "\n";
+                message+= "Created at: " + child_JSON.date + "\n";
+                message+= "Status: " + (child_JSON.completed === "yes" ? "Completed": "Not completed");
+                return true;
+            }
+        });
+        api.sendMessage(message, event.threadID);
     });
 }
 
@@ -57,6 +74,7 @@ function list(event, api, fb) {
     });
 }
 
+//to filter the list of todo item with matched status.
 function filterList(event, api, fb, type) {
     var message_type = type === "yes" ? "COMPLETED" : "INCOMPLETED";
     var message = "TODO LIST  ( " + message_type +" )\n";
@@ -196,7 +214,7 @@ function untick(event, api, fb) {
 
 // To render invalid command error and prompt available command to the user
 function invalidCommand(event,api, fb) {
-    var message = "Please try command in the below: \n" +
+    var message = "Available commands are shown as per below: \n" +
                     "1) /add (item) \n" +
                     "2) /remove (item) \n" +
                     "3) /clear (item) \n" +
@@ -208,7 +226,6 @@ function invalidCommand(event,api, fb) {
                     "9) /detail (item) \n";
 
     var renderMessage = error.wrongCommand +  '\n' + message;
-
     api.sendMessage(renderMessage,event.threadID);
 }
 
@@ -227,24 +244,6 @@ function help(event, api) {
     api.sendMessage(message, event.threadID);
 }
 
-// To extract todo item's detail with given todo name
-function detail(event, api, fb) {
-    var todo = event.body.substring(8).toLowerCase().trim();
-    var message = "The " + todo + " 's details are as per below:\n";
-    fb.child(event.threadID).once("value", function(data) {
-        data.forEach(function(childData){
-            var child_JSON = childData.val();
-            if(child_JSON.todo === todo) {
-                message+= "Item: " + child_JSON.todo + "\n";
-                message+= "Created at: " + child_JSON.date + "\n";
-                message+= "Status: " + (child_JSON.completed === "yes" ? "Completed": "Not completed");
-                return true;
-            }
-        });
-        api.sendMessage(message, event.threadID);
-    });
-}
-
 module.exports = {
     add: add,
     remove: remove,
@@ -252,8 +251,8 @@ module.exports = {
     clear: clear,
     list: list,
     invalidCommand: invalidCommand,
-    filterCompleted: completed,
-    filterIncompleted: incompleted,
+    completed: completed,
+    incompleted: incompleted,
     tick: tick,
     untick: untick,
     help: help,

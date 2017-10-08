@@ -1,7 +1,7 @@
 
 var express = require('express'),
-    router = require('./route'),
     app = express(),
+    router = require('./route'),
     fb_api = require('facebook-chat-api'),
     Firebase = require('firebase'),
     config = require('./config'),
@@ -12,7 +12,8 @@ var express = require('express'),
         storageBucket: config.storageBucket
     },
     command = require('./bot_command'),
-    port = process.env.PORT || 3000;
+    verifiedCommand = require('./helper').verifiedCommand,
+    port = process.env.PORT || 3000; // initialize port number
 
 var userThreadID = [];
 var fb = Firebase.initializeApp(firebaseConfig).database().ref();
@@ -24,17 +25,8 @@ var server = app.listen(port, function(){
     console.log("running at http://%s:%s",host,port);
 });
 
+// Use the routing declared in router.js
 app.use('',router);
-
-app.get('/',function(req,res){
-    res.send('Welcome to Fb todo created by ken lau');
-});
-
-
-function verifiedCommand (event, command){
-    return event.body.toLowerCase().includes(command);
-}
-
 
 fb_api({email: config.bot_email,password: config.bot_password}, function callback(err, api) {
     if(err) return console.error("Error message:" +  err);
@@ -55,7 +47,6 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                     console.log(JSON.stringify(event));
                     if (event.body !== null || event.body.substring(1, 0) === '/') {
                         console.log(event.body);
-                        console.log("message received");
                         if (verifiedCommand(event, "/add")) {
                             command.add(event, api, fb);
                         } else if (verifiedCommand(event, "/elo")) {
@@ -69,7 +60,6 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                         } else if (verifiedCommand(event, "/stop")) {
                             console.log("The todo bot has been stopped");
                             api.sendMessage("Goodbye.", event.threadID);
-                            //return stopListening();
                         } else if (verifiedCommand(event, "/list")) {
                             command.list(event, api, fb);
                         } else if(verifiedCommand(event, "/completed")) {
@@ -97,7 +87,6 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
         api.markAsRead(event.threadID, function(err){
             if(err) console.log(err);
         });
-
     });
 });
 

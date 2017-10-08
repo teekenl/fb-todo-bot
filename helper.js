@@ -6,8 +6,31 @@
  *
  */
 
+var bot_command = require('./bot_command'),
+    command = {
+        add: bot_command.add,
+        remove: bot_command.remove,
+        edit: bot_command.edit,
+        clear: bot_command.clear,
+        list: bot_command.list,
+        invalidCommand: bot_command.invalidCommand,
+        filterCompleted: bot_command.completed,
+        filterIncompleted: bot_command.incompleted,
+        tick: bot_command.tick,
+        untick: bot_command.untick,
+        help: bot_command.help,
+        detail: bot_command.detail
+    };
+
+
 function isNumeric(n) {
+    if(n===undefined) throw new Error("Key parameter is not entered");
     return (typeof n === "number" && !isNaN(n));
+}
+
+function verifiedCommand(message, command){
+    if(message.body===undefined) return;
+    return message.body.toLowerCase().includes(command);
 }
 
 function createJSONFormat(todo){
@@ -48,10 +71,10 @@ function hasItemIndex(event, fb, todo) {
     return false;
 }
 
-
 module.exports = {
     isNumeric: isNumeric,
     createJSONFormat: createJSONFormat,
     hasItem: hasItem,
-    hasItemIndex: hasItemIndex
+    hasItemIndex: hasItemIndex,
+    verifiedCommand: verifiedCommand
 };
