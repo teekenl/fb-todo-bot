@@ -1,21 +1,20 @@
-var request = require('request'); // or using tinyreq module for small or simple request
+/**
+ * Author: TeeKen Lau
+ * Date: Sept 2017
+ * Recent Updated Date: 7 Oct 2017
+ *
+ * List of command with implementation logic.
+ *
+ * Note: User id = event.threadID
+ */
+
 var $ = require('cheerio');
+var helper = require('./helper');
 
-// Helper function to validate the numeric input from reading message.
-function isNumeric(n) {
-    return (typeof n === "number" && !isNaN(n));
-}
 
-function createJSONFormat(todo){
-    return {
-        "todo":todo,
-        "date": new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
-        "completed": "no"
-    };
-}
-
+// Edit the todo item with given user_id
 function editItem(event, api, fb, index, newTodo) {
-    if(isNumeric(parseInt(index))) {
+    if(helper.isNumeric(parseInt(index))) {
         index = parseInt(index);
     } else{
         api.sendMessage("No item was found", event.threadID);
@@ -39,36 +38,7 @@ function editItem(event, api, fb, index, newTodo) {
     });
 }
 
-function hasItem(event, api, fb, todo) {
-    fb.child(event.threadID).once("value",function(data) {
-        for (var element in data.val()){
-            var child_JSON = data.val()[element];
-            if(child_JSON.todo === todo) {
-                fb.child(event.threadID).child(element).set(null);
-                return true;
-            }
-        }
-    });
-    return false;
-}
-
-function hasItemIndex(event, api, fb, todo) {
-    if(!isNumeric(parseInt(todo))) return false;
-
-    fb.child(event.threadID).once("value",function(data) {
-        var count = 1;
-        for (var x in data.val()) {
-
-            if(count === parseInt(todo)) {
-                fb.child(event.threadID).child(x).set(null);
-                return true;
-            }
-            count++;
-        }
-    });
-    return false;
-}
-
+// List all todo item with given user_id
 function list(event, api, fb) {
     fb.child("" + event.threadID).once("value", function(data) {
         var message = "TODO LIST:\n";
@@ -113,7 +83,6 @@ function filterList(event, api, fb, type) {
             }
         }
     });
-
 }
 
 function updateList(event, api, fb, type, todo) {
@@ -147,14 +116,14 @@ function updateList(event, api, fb, type, todo) {
                 "Enter /list to find out more about it", event.threadID);
         }
     });
-
 }
 
+// To add todo item with given user_id
 function add(event, api, fb) {
     var todo = event.body.substring(5).toLowerCase().trim();
     console.log(todo);
     if(todo.length > 0) {
-        fb.child(event.threadID).push(createJSONFormat(todo));
+        fb.child(event.threadID).push(helper.createJSONFormat(todo));
         api.sendMessage(todo + " has been added to your todo-list", event.threadID);
         console.log("One item is added");
         //list(event,api, fb);
@@ -163,11 +132,12 @@ function add(event, api, fb) {
     }
 }
 
+// To remove todo item with given todoname
 function remove(event, api, fb) {
     var todo = event.body.substring(8).toLowerCase().trim();
 
     if(todo.length > 0) {
-        if(hasItem(event, api, fb, todo) || hasItemIndex(event,api,fb, todo)) {
+        if(helper.hasItem(event, fb, todo) || helper.hasItemIndex(event,fb, todo)) {
             api.sendMessage(todo + " has been removed from your todo-list", event.threadID);
             console.log("One item is removed");
         } else {
@@ -177,7 +147,6 @@ function remove(event, api, fb) {
         pi.sendMessage("Please provide the name of todo", event.threadID);
     }
 }
-
 
 function edit(event, api, fb) {
     var todoArray = event.body.substring(6).split(" ");
@@ -195,47 +164,35 @@ function edit(event, api, fb) {
 
 }
 
+// To delete all todo item with given user id
 function clear(event, api, fb) {
     fb.child(event.threadID).set(null);
     console.log("All items cleared", event.threadID);
 }
 
-
-function changeTextColor(event, api, fb) {
-}
-
-function showList(event, api, fb) {
-    list(event, api, fb);
-}
-
-
-function elo(event, api, fb) {
-    var name = event.body.substring(5);
-    request('rasd',function(err, response) {
-        if(err) console.error(err);
-        // More feature will be available soon
-    });
-}
-
+// To show the todo item has already completed with given user id
 function completed(event,api, fb) {
     filterList(event,api,fb,"yes");
 }
 
+// To show the todo item has already incompleted with given user id
 function incompleted(event, api, fb) {
     filterList(event,api,fb,"no");
 }
 
+// To mark the todo item to the completed status with given todo name
 function tick(event, api, fb) {
     var todo = event.body.substring(6).toLowerCase().trim();
     updateList(event,api, fb, "tick", todo);
 }
 
+// To mark the todo item to the incompleted status with given todo name
 function untick(event, api, fb) {
     var todo = event.body.substring(8).toLowerCase().trim();
     updateList(event, api, fb, "untick", todo);
 }
 
-
+// To render invalid command error and prompt available command to the user
 function invalidCommand(event,api, fb) {
     var error  = "You have entered invalid command \n";
     var message = "Please try command in the below: \n" +
@@ -252,6 +209,7 @@ function invalidCommand(event,api, fb) {
     api.sendMessage(error+message,event.threadID);
 }
 
+// To render available command to the user
 function help(event, api) {
     var message = "The command line \n" +
                     "1) /add (item) \n" +
@@ -266,6 +224,7 @@ function help(event, api) {
     api.sendMessage(message, event.threadID);
 }
 
+// To extract todo item's detail with given todo name
 function detail(event, api, fb) {
     var todo = event.body.substring(8).toLowerCase().trim();
     var message = "The " + todo + " 's details are as per below:\n";
@@ -281,17 +240,14 @@ function detail(event, api, fb) {
         });
         api.sendMessage(message, event.threadID);
     });
-
 }
 
 module.exports = {
     add: add,
     remove: remove,
-    elo: elo,
     edit: edit,
     clear: clear,
-    list: showList,
-    changeTextColor: changeTextColor,
+    list: list,
     invalidCommand: invalidCommand,
     filterCompleted: completed,
     filterIncompleted: incompleted,

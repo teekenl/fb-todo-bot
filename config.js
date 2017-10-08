@@ -1,4 +1,10 @@
-'use strict';
+/**
+ * Author: TeeKen Lau
+ * Date: Sept 2017
+ *
+ * Configuration file contains API key and connection url.
+ *
+ */
 
 module.exports = {
     bot_email: "teekenlau@gmail.com",

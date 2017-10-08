@@ -1,25 +1,22 @@
-// Initialize the required libraries
-var express = require('express');
-var app = express();
-var fb_api = require('facebook-chat-api');
-var Firebase = require('firebase');
+
+var express = require('express'),
+    router = require('./route'),
+    app = express(),
+    fb_api = require('facebook-chat-api'),
+    Firebase = require('firebase'),
+    config = require('./config'),
+    firebaseConfig = {
+        apiKey: config.apiKey,
+        authDomain: config.authDomain,
+        databaseURL: config.databaseURL,
+        storageBucket: config.storageBucket
+    },
+    command = require('./bot_command'),
+    port = process.env.PORT || 3000;
 
 var userThreadID = [];
 
-var config = require('./config');
-
-var firebaseConfig = {
-    apiKey: config.apiKey,
-    authDomain: config.authDomain,
-    databaseURL: config.databaseURL,
-    storageBucket: config.storageBucket
-};
-
 var fb = Firebase.initializeApp(firebaseConfig).database().ref();
-
-var command = require('./bot_command');
-
-var port = process.env.PORT || 3000;
 
 app.get('/',function(req,res){
     res.send('Welcome to Fb todo created by ken lau');
