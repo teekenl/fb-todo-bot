@@ -15,17 +15,19 @@ var express = require('express'),
     port = process.env.PORT || 3000;
 
 var userThreadID = [];
-
 var fb = Firebase.initializeApp(firebaseConfig).database().ref();
 
-app.get('/',function(req,res){
-    res.send('Welcome to Fb todo created by ken lau');
-});
-
+// Set up server listening port.
 var server = app.listen(port, function(){
     var host = server.address().address;
     var port = server.address().port;
     console.log("running at http://%s:%s",host,port);
+});
+
+app.use('',router);
+
+app.get('/',function(req,res){
+    res.send('Welcome to Fb todo created by ken lau');
 });
 
 

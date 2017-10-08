@@ -6,9 +6,9 @@
  *
  */
 
-var ERROR_NO_FILENAME = "Please enter a filename";
-var ERROR_NOT_FOUND = "The todo is not found";
-var ERROR_COMMAND = "Please enter a valid command";
+const ERROR_NO_FILENAME = "Please enter a filename",
+      ERROR_NOT_FOUND = "The todo is not found",
+      ERROR_COMMAND = "Please enter a valid command";
 
 module.exports = {
     noFileName: ERROR_NO_FILENAME,

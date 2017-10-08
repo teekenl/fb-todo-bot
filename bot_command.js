@@ -8,8 +8,10 @@
  * Note: User id = event.threadID
  */
 
-var $ = require('cheerio');
-var helper = require('./helper');
+var $ = require('cheerio'),
+    helper = require('./helper'),
+    error = require('./error'),
+    help_message = '';
 
 
 // Edit the todo item with given user_id
@@ -194,7 +196,6 @@ function untick(event, api, fb) {
 
 // To render invalid command error and prompt available command to the user
 function invalidCommand(event,api, fb) {
-    var error  = "You have entered invalid command \n";
     var message = "Please try command in the below: \n" +
                     "1) /add (item) \n" +
                     "2) /remove (item) \n" +
@@ -206,21 +207,23 @@ function invalidCommand(event,api, fb) {
                     "8\) /incompleted \n" +
                     "9) /detail (item) \n";
 
-    api.sendMessage(error+message,event.threadID);
+    var renderMessage = error.wrongCommand +  '\n' + message;
+
+    api.sendMessage(renderMessage,event.threadID);
 }
 
 // To render available command to the user
 function help(event, api) {
-    var message = "The command line \n" +
-                    "1) /add (item) \n" +
-                    "2) /remove (item) \n" +
-                    "3) /clear (item) \n" +
-                    "4) /edit index (item) \n" +
-                    "5) /tick (item)\n" +
-                    "6) /untick (item) \n" +
-                    "7) /completed \n" +
-                    "8\) /incompleted \n" +
-                    "9) /detail (item) \n";
+    var message = 'The command line \n' +
+                    '1) /add (item) \n' +
+                    '2) /remove (item) \n' +
+                    '3) /clear (item) \n' +
+                    '4) /edit index (item) \n' +
+                    '5) /tick (item)\n' +
+                    '6) /untick (item) \n' +
+                    '7) /completed \n' +
+                    '8\) /incompleted \n' +
+                    '9) /detail (item) \n';
     api.sendMessage(message, event.threadID);
 }
 
