@@ -12,7 +12,8 @@ var bot_command = require('./bot_command'),
         tick: bot_command.tick,
         untick: bot_command.untick,
         help: bot_command.help,
-        detail: bot_command.detail
+        detail: bot_command.detail,
+        picture: bot_command.picture
     };
 
 function getCommand(message, inputCommand) {

@@ -46,7 +46,7 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                     var thread_message = event.body !== null ?
                                             event.body.split(' '): null;
 
-                    if(thread_message.length === 2 || thread_message[0] === '/list' ) {
+                    if(thread_message.length > 0 || thread_message[0] === '/list' ) {
                         var exec_command = command(event,thread_message[0]);
                         if(exec_command !== null) {
                             console.log("valid command received");
@@ -55,10 +55,10 @@ fb_api({email: config.bot_email,password: config.bot_password}, function callbac
                             console.log("wrong command received.");
                             invalidCommand(event, api, fb, error.wrongCommand);
                         }
-                    } else{
+                    } else {
                         // wrong format puts here
                         console.log("wrong command received.");
-                        invalidCommand(event, api, fb, error.wrongCommand);
+                        invalidCommand(event, api, fb, error.noMessage);
                     }
             }
         });

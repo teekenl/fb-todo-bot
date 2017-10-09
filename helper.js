@@ -11,20 +11,35 @@ function isNumeric(n) {
     return (typeof n === "number" && !isNaN(n));
 }
 
-function hasItemAndRemove(event, fb, todo) {
+function hasItem(event,fb, todo, callback) {
+    var itemFound = false;
+    fb.child(event.threadID).once("value", function(data) {
+        for(var element in data.val()) {
+            var child_JSON = data.val()[element];
+            if(child_JSON.todo === todo) {
+                itemFound = true;
+            }
+        }
+        callback(itemFound);
+    })
+}
+
+function hasItemAndRemove(event, fb, todo, callback) {
+    var itemFound = false;
     fb.child(event.threadID).once("value",function(data) {
         for (var element in data.val()){
             var child_JSON = data.val()[element];
             if(child_JSON.todo === todo) {
                 fb.child(event.threadID).child(element).set(null);
-                return true;
+                itemFound = true;
             }
         }
+        callback(itemFound);
     });
-    return false;
 }
 
-function hasItemIndexAndRemove(event, fb, todo) {
+function hasItemIndexAndRemove(event, fb, todo, callback) {
+    var itemFound = false;
     if(!isNumeric(parseInt(todo))) return false;
 
     fb.child(event.threadID).once("value",function(data) {
@@ -33,12 +48,12 @@ function hasItemIndexAndRemove(event, fb, todo) {
 
             if(count === parseInt(todo)) {
                 fb.child(event.threadID).child(x).set(null);
-                return true;
+                itemFound = true;
             }
             count++;
         }
+        callback(itemFound);
     });
-    return false;
 }
 
 function isValidCommand(message, inputCommand,commandList) {
@@ -60,6 +75,7 @@ function replaceCommandWithEmptyString(todo) {
                .replace('/help','')
                .replace('/list','')
                .replace('/edit','')
+               .replace('/picture','')
 }
 
 function getTodoName(todo) {
@@ -77,10 +93,11 @@ function createJSONFormat(todo){
         "todo":todo,
         "date": new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
         "completed": "no",
-        "photo_url": ""
+        "photo_name": ""
     };
 }
 
+// Update the todo compeletion status
 function updateTodo(event, api, fb, type, todo) {
     var itemFound = false,
         tick = type === true ? "yes" : "no";
@@ -106,6 +123,33 @@ function updateTodo(event, api, fb, type, todo) {
             var message_status = type === "tick" ? " is completed" : " is not completed";
             api.sendMessage("The " + todo + message_status , event.threadID);
             console.log(todo + "'status has been updated ");
+        } else{
+            api.sendMessage("No item was found \n" +
+                "Have you forgotten your todo? \n" +
+                "Enter /list to find out more about it", event.threadID);
+        }
+    });
+}
+
+// Update todo photo name
+function updateTodoPhoto(event, api, fb,filename) {
+    var itemFound = false;
+    console.log("Updating request from "+ event.threadID + " \n for item: " + todo);
+    console.log("Updating...");
+    fb.child(event.threadID).once("value", function(data) {
+        for(var element in data.val()){
+            var child_JSON = data.val()[element];
+            if(child_JSON.todo === todo) {
+                fb.child(event.threadID).child(element).set({
+                    "photo_name": filename
+                });
+                itemFound = true;
+                console.log("The request is updated");
+                break;
+            }
+        }
+        if(itemFound) {
+            api.sendMessage("The picture of todo has been updated", event.threadID);
         } else{
             api.sendMessage("No item was found \n" +
                 "Have you forgotten your todo? \n" +
@@ -149,10 +193,12 @@ module.exports = {
     isNumeric: isNumeric,
     hasItemAndRemove: hasItemAndRemove,
     hasItemIndexAndRemove: hasItemIndexAndRemove,
+    hasItem: hasItem,
     isValidCommand: isValidCommand,
     createJSONFormat: createJSONFormat,
     filterList: filterList,
     updateTodo: updateTodo,
+    updateTodoPhoto: updateTodoPhoto,
     getTodoName: getTodoName,
     getTodoNameWithLowerCase: getTodoNameWithLowerCase
 };
