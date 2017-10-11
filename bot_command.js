@@ -157,7 +157,7 @@ function edit(event, api, fb) {
             var count = 1;
             for (var x in data.val()) {
                 if(count === index) {
-                    fb.child(event.threadID).child(x).set({
+                    fb.child(event.threadID).child(x).update({
                         "todo": newTodo,
                         "date": new Date().toLocaleTimeString() + " " + new Date().toLocaleTimeString()
                     });

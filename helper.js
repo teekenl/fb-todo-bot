@@ -110,7 +110,7 @@ function updateTodo(event, api, fb, type, todo) {
             var child_JSON = data.val()[element];
 
             if(child_JSON.todo === todo  && !itemFound) {
-                fb.child(event.threadID).child(element).set({
+                fb.child(event.threadID).child(element).update({
                     "todo": child_JSON.todo,
                     "date": new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
                     "completed": tick
@@ -140,7 +140,7 @@ function updateTodoPhoto(event, api, fb,filename) {
         for(var element in data.val()){
             var child_JSON = data.val()[element];
             if(child_JSON.todo === todo) {
-                fb.child(event.threadID).child(element).set({
+                fb.child(event.threadID).child(element).update({
                     "photo_name": filename
                 });
                 itemFound = true;
